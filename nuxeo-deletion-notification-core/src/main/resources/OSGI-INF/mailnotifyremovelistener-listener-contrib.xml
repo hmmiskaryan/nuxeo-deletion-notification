@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<component name="deletion.notification.listener.mailnotifyremovelistener">
+<component name="org.nuxeo.listener.mailnotifyremovelistener">
 
   <extension target="org.nuxeo.ecm.core.event.EventServiceComponent" point="listener">
     <listener name="mailnotifyremovelistener"
-      class="deletion.notification.MailNotifyRemoveListener">
+      class="org.nuxeo.MailNotifyRemoveListener">
         <event>aboutToRemove</event>
     </listener>
   </extension>

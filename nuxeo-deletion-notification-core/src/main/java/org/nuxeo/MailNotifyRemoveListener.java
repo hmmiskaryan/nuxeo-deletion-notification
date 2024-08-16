@@ -1,4 +1,4 @@
-package deletion.notification;
+package org.nuxeo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.event.Event;
-import org.nuxeo.ecm.core.event.EventBundle;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
@@ -33,6 +32,10 @@ import org.nuxeo.ecm.core.io.download.DownloadService;
 import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
 import org.nuxeo.ecm.platform.ec.notification.service.NotificationService;
 import org.nuxeo.ecm.platform.ec.notification.service.NotificationServiceHelper;
+import org.nuxeo.ecm.platform.ec.notification.NotificationConstants;
+import org.nuxeo.ecm.platform.ec.notification.NotificationListenerVeto;
+import org.nuxeo.ecm.platform.ec.notification.NotificationListenerHook;
+import org.nuxeo.ecm.platform.ec.notification.NotificationImpl;
 import org.nuxeo.ecm.platform.notification.api.Notification;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentViewCodecManager;
@@ -56,7 +59,6 @@ public class MailNotifyRemoveListener implements EventListener {
 
     private NotificationService notificationService = NotificationServiceHelper.getNotificationService();
 
-    @Override
     public boolean acceptEvent(Event event) {
         if (notificationService == null) {
             return false;
@@ -64,37 +66,18 @@ public class MailNotifyRemoveListener implements EventListener {
         return notificationService.getNotificationEventNames().contains(event.getName());
     }
 
-    @Override
-    public void handleEvent(EventBundle events) {
-
-        if (notificationService == null) {
-            log.error("Unable to get NotificationService, exiting");
-            return;
-        }
-        boolean processEvents = false;
-        for (String name : notificationService.getNotificationEventNames()) {
-            if (events.containsEventName(name)) {
-                processEvents = true;
-                break;
-            }
-        }
-        if (!processEvents) {
-            return;
-        }
-        for (Event event : events) {
-            Boolean block = (Boolean) event.getContext()
-                                           .getProperty(NotificationConstants.DISABLE_NOTIFICATION_SERVICE);
-            if (block != null && block) {
-                // ignore the event - we are blocked by the caller
-                continue;
-            }
-            List<Notification> notifs = notificationService.getNotificationsForEvents(event.getName());
-            if (notifs != null && !notifs.isEmpty()) {
-                handleNotifications(event, notifs);
-            }
+    public void handleEvent(Event event) {
+        EventContext ctx = event.getContext();
+        if (!(ctx instanceof DocumentEventContext)) {
+          return;
         }
 
-    }
+        List<Notification> notifs = notificationService.getNotificationsForEvents(event.getName());
+        if (notifs != null && !notifs.isEmpty()) {
+            handleNotifications(event, notifs);
+        }
+
+	}
 
     protected void handleNotifications(Event event, List<Notification> notifs) {
 

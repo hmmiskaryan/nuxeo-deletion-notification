@@ -1,9 +1,9 @@
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Manifest-Version: 1.0
-Bundle-Vendor: deletion.notification
+Bundle-Vendor: org.nuxeo
 Bundle-Version: 1.0.0
 Bundle-Name: nuxeo-deletion-notification-core
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: deletion.notification.nuxeo-deletion-notification-core;singleton=true
+Bundle-SymbolicName: org.nuxeo.nuxeo-deletion-notification-core;singleton=true
 Nuxeo-Component: OSGI-INF/mailnotifyremovelistener-listener-contrib.xml

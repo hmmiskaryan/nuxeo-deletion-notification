@@ -2,8 +2,10 @@
   "generator-nuxeo": {
     "lastRemote": "C:\\Users\\hmiskaryan\\.cache\\node-yeoman-remote-cache\\nuxeo\\generator-nuxeo-meta\\stable",
     "promptValues": {
-      "package": "deletion.notification"
+      "package": "org.nuxeo",
+      "nuxeo_version": "2021.0"
     },
-    "_nuxeo_version": "2021.0"
+    "_nuxeo_version": "2021.0",
+    "multi": true
   }
 }
